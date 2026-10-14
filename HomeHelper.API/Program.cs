@@ -101,11 +101,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+
 using (var scope = app.Services.CreateScope())
 {
-    await IdentitySeeder.SeedRolesAsync(
-        scope.ServiceProvider);
+    await IdentitySeeder.SeedRolesAsync(scope.ServiceProvider);
+
+    var dbContext = scope.ServiceProvider
+        .GetRequiredService<AppDbContext>();
+
+    await ServiceSeeder.SeedServicesAsync(dbContext);
 }
+
 
 app.Run();
 
